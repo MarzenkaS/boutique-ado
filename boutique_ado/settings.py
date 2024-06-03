@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import os
+import dj_database_url
 from pathlib import Path
 if os.path.exists("env.py"):
     import env
@@ -32,8 +33,10 @@ DEBUG = True
 ALLOWED_HOSTS = ['8000-marzenkas-boutiqueado-k6lolxfqvm3.ws-eu110.gitpod.io',
                  '8000-marzenkas-boutiqueado-k6lolxfqvm3.ws-eu111.gitpod.io',
                  '8000-marzenkas-boutiqueado-k6lolxfqvm3.ws-eu114.gitpod.io',
+                 '.herokuapp.com',
+                 'ckz8780-boutique-ado.herokuapp.com',
+                 'localhost',
                  ]
-
 
 # Application definition
 
@@ -125,12 +128,21 @@ WSGI_APPLICATION = 'boutique_ado.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
+# DATABASES = {
+# 'default': dj_database_url.parse('postgres://yexjwngh:cgDmhltQs8sLgKAJGnsGO4-1WgUTOB_q@flora.db.elephantsql.com/yexjwngh')
+# 'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 
 
 # Password validation
